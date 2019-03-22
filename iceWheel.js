@@ -40,8 +40,6 @@
         }
     });
 
-    // window.theWheel = theWheel;
-
     // Loads the tick audio sound in to an audio object.
     let audio = new Audio('https://raw.githubusercontent.com/zarocknz/javascript-winwheel/master/examples/wheel_of_fortune/tick.mp3');
     
@@ -53,32 +51,15 @@
     }
 
     // Vars used by the code in this page to do power controls.
-    let wheelPower    = 0;
     let wheelSpinning = false;
 
     // -------------------------------------------------------
-    // Function to handle the onClick on the power buttons, export
+    // Function to handle the onClick on the power buttons
     // -------------------------------------------------------
     window.powerSelected = function(powerLevel) {
         // Ensure that power can't be changed while wheel is spinning.
         if (wheelSpinning == false) {
-            // Reset all to grey incase this is not the first time the user has selected the power.
-            document.getElementById('pw1').className = "";
-            document.getElementById('pw2').className = "";
-            document.getElementById('pw3').className = "";
-            // Now light up all cells below-and-including the one selected by changing the class.
-            if (powerLevel >= 1) {
-                document.getElementById('pw1').className = "pw1";
-            }
-            if (powerLevel >= 2) {
-                document.getElementById('pw2').className = "pw2";
-            }
-            if (powerLevel >= 3) {
-                document.getElementById('pw3').className = "pw3";
-            }
-            // Set wheelPower var used when spin button is clicked.
-            wheelPower = powerLevel;
-            // Light up the spin button by changing it's source image and adding a clickable class to it.
+            // Light up the spin button by changing its source image and adding a clickable class to it.
             document.getElementById('spin_button').src = SPIN_ON_SRC;
             document.getElementById('spin_button').className = "clickable";
         }
@@ -92,13 +73,7 @@
         if (wheelSpinning == false) {
             // Based on the power level selected adjust the number of spins for the wheel, the more times is has
             // to rotate with the duration of the animation the quicker the wheel spins.
-            if (wheelPower === 1) {
-                theWheel.animation.spins = 3;
-            } else if (wheelPower === 2) {
-                theWheel.animation.spins = 6;
-            } else if (wheelPower === 3) {
-                theWheel.animation.spins = 10;
-            }
+            theWheel.animation.spins = 3;
 
             // Disable the spin button so can't click again while wheel is spinning.
             document.getElementById('spin_button').src = SPIN_OFF_SRC;
@@ -117,14 +92,13 @@
     // Function for reset button.
     // -------------------------------------------------------
     window.resetWheel = function() {
-        console.log(" the wheel is " + theWheel);
         theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
         theWheel.rotationAngle = 0;     // Re-set the wheel angle to 0 degrees.
         theWheel.draw();                // Call draw to render changes to the wheel.
-        document.getElementById('pw1').className = "";  // Remove all colours from the power level indicators.
-        document.getElementById('pw2').className = "";
-        document.getElementById('pw3').className = "";
+
         wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+        document.getElementById('spin_button').src = SPIN_ON_SRC;
+        document.getElementById('spin_button').className = "clickable";
     };
 
     // -------------------------------------------------------
@@ -140,5 +114,6 @@
         } else {
             alert(indicatedSegment.text.replace(/\n/g, " "));
         }
+        // TODO: wheelSpinning = false?
     }
 })();
