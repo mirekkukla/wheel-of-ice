@@ -1,40 +1,33 @@
-body
-{
+body {
     font-family: arial;
 }
 
 /* Sets the background image for the wheel */
-td.the_wheel
-{
-    background-image: url(https://raw.githubusercontent.com/zarocknz/javascript-winwheel/master/examples/wheel_of_fortune/wheel_back.png);
+canvas {
+    background-image: url(https://images.alko.fi/images/cs_srgb,f_auto,t_medium/cdn/742703/smirnoff-ice.jpg);
     background-position: center;
-    background-repeat: none;
+    background-repeat: no-repeat;
+    background-size: 12%;
+
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
-/* Do some css reset on selected elements */
-h1, p
-{
-    margin: 0;
-}
-
-div.power_controls
-{
-    margin-right:70px;
-}
-
-div.html5_logo
-{
-    margin-left:70px;
+div.spin_box {
+    /*margin-right: 70px;*/
 }
 
 /* Style applied to the spin button once a power has been selected */
-.clickable
-{
+.clickable {
     cursor: pointer;
 }
 
+/* Do some css reset on selected elements */
+h1, p {
+    margin: 0;
+}
+
 /* Other misc styles */
-.margin_bottom
-{
+.margin_bottom {
     margin-bottom: 5px;
 }

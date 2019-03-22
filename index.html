@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>The Wheel of ICE</title>
@@ -6,30 +7,20 @@
         <link rel="stylesheet" type="text/css" href="iceWheel.css">
     </head>
     <body>
-        <div align="center">
+        <div style="text-align:center">
+
             <h1>The Wheel of ICE</h1>
-            <table cellpadding="0" cellspacing="0" border="0">
-            <tr>
-                <td>
-                    <div class="power_controls">
-                        <br />
-                        <br />
-                        <br />
-                        <img id="spin_button" src="https://raw.githubusercontent.com/zarocknz/javascript-winwheel/master/examples/wheel_of_fortune/spin_on.png" alt="Spin" onClick="startSpin();" />
-                        <br /><br />
-                        &nbsp;&nbsp;<a href="#" onClick="resetWheel(); return false;">Play Again</a><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(reset)
-                    </div>
-                </td>
-                <td width="438" height="582" class="the_wheel" align="center" valign="center">
-                    <canvas id="canvas" width="434" height="434">
-                        <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
-                    </canvas>
-                </td>
-            </tr>
-        </table>
+            <canvas id="canvas" width="434" height="434">
+                <p style="{color: white};text-align:center">Sorry, your browser doesn't support canvas. Please try another.</p>
+            </canvas>
+
+            <div class="spin_box">
+                <img id="spin_button" src="https://raw.githubusercontent.com/zarocknz/javascript-winwheel/master/examples/wheel_of_fortune/spin_on.png" alt="Spin" onClick="startSpin();" />
+            </div>
 
         <!-- The Winwheel object has to be construct AFTER the canvas object has been built -->
         <script src="iceWheel.js"></script>
 
+        </div>
     </body>
 </html>
