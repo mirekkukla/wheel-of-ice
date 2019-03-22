@@ -4,27 +4,38 @@ body {
 
 /* Sets the background image for the wheel */
 canvas {
-    background-image: url(https://images.alko.fi/images/cs_srgb,f_auto,t_medium/cdn/742703/smirnoff-ice.jpg);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 12%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+
+#temp {
+    margin-left: auto;
+    margin-right: auto;
 
     margin-top: 20px;
     margin-bottom: 20px;
+
+    width: 434px;
+    height: 454px;
+
 }
 
-#test_img {
-    /* Need "block" for rotation to work */
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 100px;
+#test_img {    
+    display: block; /* Need for rotation to work */
+    max-width: 50px;
+
+    position: absolute;
+    left: 192px;;
+    top: 150px;
+
+    /*z-index: 2;*/
 }
 
 .rotating_img {
     /* One sec less than the wheel, looks better this way */
-    -webkit-transition: -webkit-transform 9s ease-out;
-    -webkit-transform: rotate(-3600deg);
+    -webkit-transition: -webkit-transform 8s ease-out;
+    -webkit-transform: rotate(-3240deg);
 }
 
 /* Style applied to the spin button once a power has been selected */
