@@ -8,6 +8,8 @@
     const SPIN_OFF_SRC = SRC_BASE + "/spin_off.png";
     const AUDIO_SRC = SRC_BASE + "/tick.mp3";
 
+    const NUM_SPINS = 5;
+
     let theWheel = new Winwheel({
         'outerRadius'     : 212,        // Set outer radius so wheel fits inside the background.
         'innerRadius'     : 75,         // Make wheel hollow so segments don't go all way to center.
@@ -27,9 +29,10 @@
         'animation':
         {
             'type'     : 'spinToStop',
-            'duration' : 10,    // Duration in seconds.
-            'spins'    : 5,     // Default number of complete spins.
+            'duration' : 10,            // Duration in seconds.
+            'spins'    : NUM_SPINS,     // Default number of complete spins.
             'callbackFinished' : alertPrize,
+            // 'callbackAfter'    : rotateBottle,
             'callbackSound'    : playSound,   // Function to call when the tick sound is to be triggered.
             'soundTrigger'     : 'pin'        // Specify pins are to trigger the sound, the other option is 'segment'.
         },
@@ -73,8 +76,25 @@
             // Set to true so that power can't be changed and spin button re-enabled during
             // the current animation. The user will have to reset before spinning again.
             wheelSpinning = true;
+
+            document.getElementById("test_img").className = "rotating_img";
         }
     };
+
+    function rotateBottle() {            
+
+            let testImg = document.getElementById("test_img");
+            console.log(testImg.style);
+
+            // let degrees = 
+
+            testImg.removeAttribute('style');
+            // var deg = 500 + Math.round(Math.random() * 500);
+            var css = '-webkit-transform: rotate(' + 20 + 'deg);';
+            testImg.setAttribute(
+                'style', css
+            );
+    }
 
     // -------------------------------------------------------
     // Get the wheel ready for another spin
@@ -91,6 +111,8 @@
         document.getElementById('spin_button').src = SPIN_ON_SRC;
         document.getElementById('spin_button').className = "clickable";
         wheelSpinning = false;
+
+        document.getElementById("test_img").className = "";
     };
 
     // -------------------------------------------------------

@@ -13,21 +13,21 @@ canvas {
     margin-bottom: 20px;
 }
 
-div.spin_box {
-    /*margin-right: 70px;*/
+#test_img {
+    /* Need "block" for rotation to work */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100px;
+}
+
+.rotating_img {
+    /* One sec less than the wheel, looks better this way */
+    -webkit-transition: -webkit-transform 9s ease-out;
+    -webkit-transform: rotate(-3600deg);
 }
 
 /* Style applied to the spin button once a power has been selected */
 .clickable {
     cursor: pointer;
-}
-
-/* Do some css reset on selected elements */
-h1, p {
-    margin: 0;
-}
-
-/* Other misc styles */
-.margin_bottom {
-    margin-bottom: 5px;
 }
