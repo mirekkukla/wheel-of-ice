@@ -1,4 +1,4 @@
-/* global Winwheel, Audio, alert */
+/* global Winwheel, Audio, alert, gtag, fetch, emailjs */
 /* adopted from http://dougtesting.net/winwheel/examples/wheel_of_fortune*/
 (function(){
     "use strict";
@@ -9,6 +9,7 @@
     const SPIN_OFF_SRC = SRC_BASE + "/spin_off.png";
     const AUDIO_SRC = SRC_BASE + "/tick.mp3";
 
+    // wheel constants
     const NUM_SEGMENTS = 6;
     const NUM_SPINS = 5;
     const SPIN_DURATION = 10;
@@ -29,10 +30,26 @@
            {'fillStyle' : '#ad172b', 'text' : '\nYou owe\neveryone $3'},
            {'fillStyle' : '#ffffff', 'text' : '\nChug a beer and\nspin again'}];
 
-    
-    let audio = new Audio(AUDIO_SRC); // Loads the tick audio sound in to an audio object.
-    let theWheel = getNewWheel(normalSlices); // Initial to a normal wheel
+    // setup emailjs client
+    emailjs.init("user_8JLOO0Mj5SQ4um0RmAmTP");
+
+    // think of these as instance variables
+    let audio = new Audio(AUDIO_SRC); // the ticking sound
+    let theWheel = getNewWheel(normalSlices);
     let wheelSpinning = false;
+    let ipDetails = null;
+
+    function setIPDetails() {
+        fetch("https://api.ipify.org?format=json") // get IP
+            .then(handleErrors)
+            .then(response =>  response.json())
+            // chained call: now get geo info
+            .then(json => fetch("https://geo.ipify.org/api/v1?apiKey=at_IUxTwRiCCI0kwGkZSDm3VGaWxF4LY&ipAddress=" + json.ip))
+            .then(handleErrors)
+            .then(response =>  response.json())
+            .then(json => ipDetails = json)
+            .catch(error => console.log(error));
+    }
 
     function getNewWheel(segments) {
         return new Winwheel({
@@ -48,7 +65,7 @@
                 'type'     : 'spinToStop',
                 'duration' : SPIN_DURATION, // Duration in seconds.
                 'spins'    : NUM_SPINS,     // Default number of complete spins.
-                'callbackFinished' : alertPrize,
+                'callbackFinished' : alertAndLog,
                 'callbackSound'    : playSound,   // Function to call when the tick sound is to be triggered.
                 'soundTrigger'     : 'pin'        // Specify pins are to trigger the sound, the other option is 'segment'.
             },
@@ -127,24 +144,62 @@
     // -------------------------------------------------------
     // Called when the spin animation has finished
     // -------------------------------------------------------
-    function alertPrize(indicatedSegment) {
+    function alertAndLog(indicatedSegment) {
         // TODO: use a nicer popup than alert
-        if (indicatedSegment.text === "\nSpin again") {
+
+        let cleanText = indicatedSegment.text.trim("\n").replace(/\n/g, " ");
+        let outcome = isJandroMode() ? cleanText + " (Jandro mode)" : cleanText;
+
+        // Log / email before showing popup
+        if ("gtag" in window) {
+            console.log(`Sending event with label '${outcome}' to analytics`);
+            gtag('event', 'spin', {event_label: outcome});
+        }
+
+        sendEmail(outcome);
+
+        if (cleanText === "Spin again") {
             alert("LAAAAAAME. Try again.");
-        } else if (indicatedSegment.text === "\nICE, BITCH") {
+        } else if (cleanText === "ICE, BITCH") {
             alert("OOOOOOOOOOOH SNAP! CHUG IIIIIIIT!");
         } else {
-            alert(indicatedSegment.text.replace(/\n/g, " "));
+            alert(cleanText);
         }
 
         // Light up the spin button by changing its source image and adding a clickable class to it.
         resetWheel();
     }
 
+
+    function sendEmail(outcome) {
+        let loc = ipDetails.location;
+        let location = ipDetails ? `${loc.city}, ${loc.region}, ${loc.country} (from ${ipDetails.ip})` : null;
+        // TODO: gmail link
+        let templateParams = {
+            location: location,
+            outcome: outcome
+        };
+        console.log (`Sending email with params '${JSON.stringify(templateParams)}' to EmailJS`);
+        // TODO: look into cross origin block
+        emailjs.send('sendgrid', 'wheel_of_ice', templateParams)
+            .then((response) => console.log('SUCCESS!', response.status, response.text))
+            .catch((error) => console.log('FAILED...', error)); // TODO: test catch
+    }
+
     // HELPERS
-    
+
     function isJandroMode() {
         return document.getElementById('jandro_checkbox').checked;
     }
+
+    // since `fetch()` doesn't "catch" HTTP errors
+    // make sure to call this BEFORE you process the HTTP response
+    function handleErrors(response) {
+        if (!response.ok) {
+            throw Error(response.statusText);
+        }
+        return response;
+    }
+
 
 })();
