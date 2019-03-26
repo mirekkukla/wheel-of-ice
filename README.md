@@ -31,16 +31,18 @@ Get an email with IP-determined geographic info whenever someone rolls the wheel
 Sending an email from a static front-end only webpage is only possible if you use an intermediary SMTP server. If you were to call this server _directly_ from your static front-end page, you'd be exposing your SMTP credentials (encrypted or otherwise) to the internet at large, which would allow anybody to go on a spam email frenzy using your account (\*cough\* smtpjs \*cough\*).
 
 EmailJS is a bit of a compromise. Anyone can still "trigger" an email whenever they want, but they can't send "anything" to "anyone." EmailJS explains it nicely:
-```
-"A better way to think of EmailJS in terms of security is not as a service that allows you to send email from Javascript, but rather as a service that allows you to create predefined set of emails via the dashboard, and then just trigger the emails from the Javascript" (from the [http://www.emailjs.com/faq/](FAQ))
-```
 
-Note that by default, reporting is disabled when running locally (see `reportingDisabled
+> A better way to think of EmailJS in terms of security is not as a service that allows you to send email from Javascript, but rather as a service that allows you to create predefined set of emails via the dashboard, and then just trigger the emails from the Javascript" (from the (FAQ)[http://www.emailjs.com/faq/)
+
+Note that by default, reporting is disabled when running locally (see the `reportingDisabled()` function)
 
 ### Setting up an emailJS email template
 The emailJS [documentation](https://www.emailjs.com/docs) is pretty straightforward:
 - Add an [email service](https://www.emailjs.com/docs/tutorial/adding-email-service) (I use SendGrid)
-- Create an [email template](https://www.emailjs.com/docs/tutorial/creating-email-template) called "wheel_of_ice"
+- Create an [email template](https://www.emailjs.com/docs/tutorial/creating-email-template) called "wheel\_of\_ice"
     - You can use tempalte paratemetrs in the body of the email, the recipeint line, etc
-    - Below the recipient is hard-coded as XYZ@gmail.com
+    - Below the recipient is hard-coded as "XYZ@gmail.com"
       <img src="https://i.ibb.co/nkCyVXy/emailjs-wheel.jpg" alt="Email Template" width="434"/>
+    - Note the template parameters (such as `{{outcome}}`) above, and compare them to the parameters passed via the triggering API call
+
+There's a good chance the resulting email will get categorized as spam. If using gmail, just set up a filter to whitelist them.
