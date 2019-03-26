@@ -173,18 +173,21 @@
     // Send email using EmailJS (note that gmail might categorize the email as spam)
     function sendEmail(outcome) {
         let locationStr = null;
+        let mapsLink = null;
         if (ipDetails === null) {
             console.warn("IP details haven't been set yet, investigate");
             locationStr = "Error finding IP address";
         } else {
             let location = ipDetails.location;
             locationStr = `${location.city}, ${location.region}, ${location.country} (from ${ipDetails.ip})`;
+            mapsLink = `https://www.google.com/maps/@${location.lat},${location.lng},12z`
         }
 
         // TODO: link to latitude / longtitude on google maps
         let templateParams = {
             location: locationStr,
-            outcome: outcome
+            outcome: outcome,
+            maps_link: mapsLink
         };
 
         console.log (`Sending email with params '${JSON.stringify(templateParams)}' to EmailJS`);
