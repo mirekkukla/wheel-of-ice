@@ -9,6 +9,10 @@
     const SPIN_OFF_SRC = SRC_BASE + "/spin_off.png";
     const AUDIO_SRC = SRC_BASE + "/tick.mp3";
 
+    // API keys (either hard code them here or load them in the header of your index.html file)
+    const GEO_KEY = window.GEO_KEY;
+    const EMAILJS_KEY = window.EMAILJS_KEY;
+
     // Wheel constants
     const NUM_SEGMENTS = 6;
     const NUM_SPINS = 5;
@@ -31,7 +35,9 @@
        {'fillStyle' : '#ffffff', 'text' : '\nChug a beer'}];
 
     // Setup emailjs client
-    emailjs.init("user_8JLOO0Mj5SQ4um0RmAmTP");
+    if (!runningLocally()) {
+        emailjs.init(EMAILJS_KEY);
+    }
 
     // Think of these as instance variables
     let audio = new Audio(AUDIO_SRC); // the ticking sound
@@ -46,7 +52,7 @@
         fetch("https://api.ipify.org?format=json")
             .then(handleFetchErrors)
             .then(response => response.json())
-            .then(json => fetch("https://geo.ipify.org/api/v1?apiKey=at_IUxTwRiCCI0kwGkZSDm3VGaWxF4LY&ipAddress=" + json.ip))
+            .then(json => fetch(`https://geo.ipify.org/api/v1?apiKey=${GEO_KEY}&ipAddress=${json.ip}`))
             .then(handleFetchErrors)
             .then(response => response.json())
             .then(json => {
@@ -89,14 +95,21 @@
         let outcome = isJandroMode() ? cleanText + " (Jandro mode)" : cleanText;
 
         // Google analytics
-        if ("gtag" in window) {
+        if (runningLocally()) {
+            console.log("Running locally, not sending data to analytics");
+        } else if (!("gtag" in window)) {
+            console.warn("Analytics not setup");
+        } else {
             console.log(`Sending event with label '${outcome}' to analytics`);
             gtag('event', 'spin', {event_label: outcome});
-        } else {
-            console.log("Analytics not setup");
         }
 
-        sendEmail(outcome);
+        // Email notifications
+        if (runningLocally()) {
+            console.log("Running locally, not sending email");
+        } else {
+            sendEmail(outcome);
+        }
 
         // TODO: use a nicer popup than alert
         if (cleanText === "Spin again") {
@@ -114,7 +127,7 @@
 
     // Play a single "click"
     function playSound() {
-        audio.pause(); // reset sound in case its already playing
+        audio.pause(); // reset sound in case it's already playing
         audio.currentTime = 0;
         audio.play();
     }
@@ -178,12 +191,11 @@
             console.warn("IP details haven't been set yet, investigate");
             locationStr = "Error finding IP address";
         } else {
-            let location = ipDetails.location;
-            locationStr = `${location.city}, ${location.region}, ${location.country} (from ${ipDetails.ip})`;
-            mapsLink = `https://www.google.com/maps/@${location.lat},${location.lng},12z`
+            let loc = ipDetails.location;
+            locationStr = `${loc.city}, ${loc.region}, ${loc.country} (from ${ipDetails.ip})`;
+            mapsLink = `https://www.google.com/maps/@${loc.lat},${loc.lng},12z`
         }
 
-        // TODO: link to latitude / longtitude on google maps
         let templateParams = {
             location: locationStr,
             outcome: outcome,
@@ -199,6 +211,14 @@
 
     // HELPERS
 
+
+    // If running as static html, hostname is ""
+    function runningLocally() {
+        return ["localhost", "127.0.0.1", ""].includes(window.location.hostname);
+    }
+
+
+    // "Jandro mode" checkbox is checked
     function isJandroMode() {
         return document.getElementById('jandro_checkbox').checked;
     }
