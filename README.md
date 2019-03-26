@@ -4,16 +4,16 @@ A static-page app that let's you spin the Wheel of ICE. Image of resulting page 
 <img src="https://i.ibb.co/D5XqZzM/wheel-img.jpg" alt="Wheel of ICE image" width="434"/>
 
 
-### Running locally
+## Running locally
 It's a static webpage, so simply open `index.html` in your browser of choice.
 
-### Hosting
+## Hosting
 For the quickest scrappy setup I like "hosting" static webpages with [https://codepen.io](codepen.io) (no account needed):
 - Create a new "anonymous" pen
 - Copy each of the included html, css, javascript files over
 - Check out the 'live view' (or replace "pen" in the url with "full")
 
-### Setup reporting (optional)
+## Setup reporting (optional)
 Get an email with IP-determined geographic info whenever someone rolls the wheel (catch that sneaky cheater):
 - Create a free account with [geo.ipify](https://geo.ipify.org) and get an API key
 - Create a free account with [emailjs.com](https://www.emailjs.com) and get an API key
@@ -25,18 +25,18 @@ Get an email with IP-determined geographic info whenever someone rolls the wheel
     window.GEO_KEY = "your_geo_key";
     window.EMAILJS_KEY = "your_emailjs_key";
     ```
-    - If setting up reporting on your internet-facing site, just hard-code your API keys (as above) into your header or into iceWheel.js directly. Yes, anyone visiting your site will be able to see your API keys, but there's nothing malicious they can do with these two locked-down services. And presumably you're just setting this up to dick around anyway.
+    - If setting up reporting on your internet-facing site, just hard-code your API keys (as above) into your header or into `iceWheel.js` directly. Yes, anyone visiting your site will be able to see your API keys, but there's not much malicious they can do with these two locked-down services. And presumably you're just setting this up to dick around anyway.
 
-### About emailJS
-Sending an email from a static front-end only webpage is only possible if you use an intermediary SMTP server. If you were to call this server _directly_ from your static front-end page, you'd be exposing your SMTP credentials (encrypted or otherwise) to the internet at large, which would allow anybody to go on a spam email frenzy using your account (\*cough\* smtpjs \*cough\*).
+#### About emailJS
+Sending an email from a static front-end only webpage is only possible if you use an intermediary SMTP server. And if you were to call this server _directly_ from your static front-end page, you'd be exposing your SMTP credentials (encrypted or otherwise) to the internet at large, which would allow anybody to go on a spam email frenzy using your account (\*cough\* smtpjs \*cough\*).
 
-EmailJS is a bit of a compromise. Anyone can still "trigger" an email whenever they want, but they can't send "anything" to "anyone." EmailJS explains it nicely:
+EmailJS is a bit of a compromise. A malicious party can still "trigger" an email (that's affiliated with your account) whenever they want, but they can't send "anything" to "anyone." EmailJS explains it nicely:
 
 > A better way to think of EmailJS in terms of security is not as a service that allows you to send email from Javascript, but rather as a service that allows you to create predefined set of emails via the dashboard, and then just trigger the emails from the Javascript" (from the (FAQ)[http://www.emailjs.com/faq/)
 
 Note that by default, reporting is disabled when running locally (see the `reportingDisabled()` function)
 
-### Setting up an emailJS email template
+#### Setting up an emailJS email template
 The emailJS [documentation](https://www.emailjs.com/docs) is pretty straightforward:
 - Add an [email service](https://www.emailjs.com/docs/tutorial/adding-email-service) (I use SendGrid)
 - Create an [email template](https://www.emailjs.com/docs/tutorial/creating-email-template) called "wheel\_of\_ice"
