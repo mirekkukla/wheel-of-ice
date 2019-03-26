@@ -38,6 +38,7 @@
     let theWheel = getNewWheel(normalSlices);
     let wheelSpinning = false;
     let ipDetails = null;
+    setIPDetails();
 
 
     // Get the IP, use it to get geo info, and set the `ipDetails` instance var
@@ -48,8 +49,10 @@
             .then(json => fetch("https://geo.ipify.org/api/v1?apiKey=at_IUxTwRiCCI0kwGkZSDm3VGaWxF4LY&ipAddress=" + json.ip))
             .then(handleFetchErrors)
             .then(response => response.json())
-            .then(json => ipDetails = json)
-            .catch(error => console.log(error));
+            .then(json => {
+                console.log("IP details: " + JSON.stringify(json));
+                ipDetails = json;
+            }).catch(error => console.log(error));
     }
 
 
@@ -89,6 +92,8 @@
         if ("gtag" in window) {
             console.log(`Sending event with label '${outcome}' to analytics`);
             gtag('event', 'spin', {event_label: outcome});
+        } else {
+            console.log("Analytics not setup");
         }
 
         sendEmail(outcome);

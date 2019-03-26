@@ -11,7 +11,7 @@
         <div style="text-align:center">
 
             <h1>The Wheel of ICE</h1>
-            <div id="wheel_container" style="text-align:center;position:relative">
+            <div id="wheel_container">
                 <canvas id="canvas" width="434" height="434">
                     <p>FAIL: Your browser doesn't support canvas</p>
                 </canvas>
@@ -19,13 +19,13 @@
             </div>
 
             <div class="spin_box">
-                <img id="spin_button" src="https://raw.githubusercontent.com/zarocknz/javascript-winwheel/master/examples/wheel_of_fortune/spin_on.png" alt="Spin" onClick="startSpin();" />
+                <img id="spin_button" src="https://raw.githubusercontent.com/zarocknz/javascript-winwheel/master/examples/wheel_of_fortune/spin_on.png" alt="Start Spin Button" onClick="startSpin();" />
             </div>
 
             <br>
             <input id="jandro_checkbox" type="checkbox">Jandro mode
 
-        <!-- The Winwheel object has to be construct AFTER the canvas object has been built -->
+        <!-- The Winwheel object has to be constructed AFTER the canvas object has been built -->
         <script src="iceWheel.js"></script>
 
         </div>
