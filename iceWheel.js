@@ -12,6 +12,7 @@
     // API keys (either hard code them here or load them in the header of your index.html file)
     const GEO_KEY = window.GEO_KEY;
     const EMAILJS_KEY = window.EMAILJS_KEY;
+    const EMAIL_JS_TEMPATE = "wheel_of_ice";
 
     // Wheel constants
     const NUM_SEGMENTS = 6;
@@ -35,7 +36,7 @@
        {'fillStyle' : '#ffffff', 'text' : '\nChug a beer'}];
 
     // Setup emailjs client
-    if (!runningLocally()) {
+    if (!reportingDisabled()) {
         emailjs.init(EMAILJS_KEY);
     }
 
@@ -95,8 +96,8 @@
         let outcome = isJandroMode() ? cleanText + " (Jandro mode)" : cleanText;
 
         // Google analytics
-        if (runningLocally()) {
-            console.log("Running locally, not sending data to analytics");
+        if (reportingDisabled()) {
+            console.log("Reporting disabled, not sending data to analytics");
         } else if (!("gtag" in window)) {
             console.warn("Analytics not setup");
         } else {
@@ -105,8 +106,8 @@
         }
 
         // Email notifications
-        if (runningLocally()) {
-            console.log("Running locally, not sending email");
+        if (reportingDisabled()) {
+            console.log("Reporting disabled, not sending email");
         } else {
             sendEmail(outcome);
         }
@@ -203,7 +204,7 @@
         };
 
         console.log (`Sending email with params '${JSON.stringify(templateParams)}' to EmailJS`);
-        emailjs.send('sendgrid', 'wheel_of_ice', templateParams)
+        emailjs.send('sendgrid', EMAIL_JS_TEMPATE, templateParams)
             .then((response) => console.log('SUCCESS!', response.status, response.text))
             .catch((error) => console.error('FAILED...', error));
     }
@@ -212,10 +213,9 @@
     // HELPERS
 
 
-    // If running as static html, hostname is ""
-    function runningLocally() {
-        return false;
-        // return ["localhost", "127.0.0.1", ""].includes(window.location.hostname);
+    // Disable reporting if running locally (if running as static html, hostname is "")
+    function reportingDisabled() {
+        return ["localhost", "127.0.0.1", ""].includes(window.location.hostname);
     }
 
 
