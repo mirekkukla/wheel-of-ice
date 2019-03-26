@@ -9,10 +9,10 @@ canvas {
     top: 0px;
 }
 
-/* Holds the canvas the spinning bottle */
+/* Holds the canvas and the spinning bottle */
 #wheel_container {
     position: relative;
-    
+
     margin-left: auto;
     margin-right: auto;
     margin-top: 20px;
