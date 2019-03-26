@@ -8,3 +8,5 @@ Hack "hosting" with codepen.io:
 - copy each of the include html, css, javascript files over
 - check out the 'live view' (or replace "pen" in the url with "full")
 - share URL with others
+
+![Wheel of ICE image](https://i.ibb.co/D5XqZzM/wheel-img.jpg)
