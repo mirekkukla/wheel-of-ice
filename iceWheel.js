@@ -39,6 +39,7 @@
     let wheelSpinning = false;
     let ipDetails = null;
 
+
     // Get the IP, use it to get geo info, and set the `ipDetails` instance var
     function setIPDetails() {
         fetch("https://api.ipify.org?format=json")
@@ -50,6 +51,7 @@
             .then(json => ipDetails = json)
             .catch(error => console.log(error));
     }
+
 
     // Get a new Winwheel object
     function getNewWheel(segments) {
@@ -65,7 +67,7 @@
                 'type'     : 'spinToStop',
                 'duration' : SPIN_DURATION,   // duration in seconds
                 'spins'    : NUM_SPINS,       // default number of complete spins
-                'callbackFinished' : alertAndLog,
+                'callbackFinished' : alertAndLog, // function to call when wheel has finished spinning
                 'callbackSound'    : playSound,   // function to call when the tick sound is to be triggered
                 'soundTrigger'     : 'pin'        // specify pins are to trigger the sound, the other option is 'segment'
             },
@@ -77,66 +79,6 @@
         });
     }
     
-    function playSound() {
-        audio.pause(); // reset sound in case its already playing
-        audio.currentTime = 0;
-        audio.play();
-    }
-
-    // Click handler for spin button
-    window.startSpin = function() {
-        // Can't start a spin if one is already running
-        if (wheelSpinning) {
-            return;
-        }
-        
-        resetWheel();
-
-        // Disable the spin button
-        document.getElementById('spin_button').src = SPIN_OFF_SRC;
-        document.getElementById('spin_button').className = "";
-        
-        if (isJandroMode()) {
-            // Always land in the first slice, but make it "look" random
-            // EX: for slice size = 60 we want an angle somewhere in [61, 119]
-            const SLICE_SIZE = 360 / NUM_SEGMENTS;
-            theWheel.animation.stopAngle = (SLICE_SIZE + 1) + Math.floor(Math.random() * (SLICE_SIZE - 1));
-        } else {
-            theWheel.animation.stopAngle = null;
-        }
-
-        // Spin the wheel
-        theWheel.startAnimation();
-
-        // Spin the inner bottle
-        document.getElementById("test_img").className = "rotating_img";
-
-        // Set to true so that power can't be changed and spin button re-enabled during
-        // the current animation. The user will have to reset before spinning again
-        wheelSpinning = true;
-    };
-
-    // Get the wheel ready for another spin (potentially switch wheel type)
-    function resetWheel() {
-        let oldRotationAngle = theWheel.rotationAngle;
-        theWheel = getNewWheel(isJandroMode() ? jandroSlices : normalSlices);
-
-        // For the spin speed to work properly, the initial angle needs to be between 0 and 360
-        // See http://dougtesting.net/winwheel/docs/tut20_making_it_responsive
-        theWheel.rotationAngle = oldRotationAngle % 360;
-        theWheel.draw();
-
-        // Make the button clickable again
-        document.getElementById('spin_button').src = SPIN_ON_SRC;
-        document.getElementById('spin_button').className = "clickable";
-        wheelSpinning = false;
-
-        // Revert back to a non-spinning image
-        document.getElementById("test_img").className = "";
-
-        // Re-load IP address info (IP might have changed since we last loaded the page)
-        setIPDetails();
-    }
 
     // Called when the spin animation has finished
     function alertAndLog(indicatedSegment) {
@@ -164,6 +106,65 @@
         resetWheel();
     }
 
+
+    // Play a single "click"
+    function playSound() {
+        audio.pause(); // reset sound in case its already playing
+        audio.currentTime = 0;
+        audio.play();
+    }
+
+
+    // Click handler for spin button
+    window.startSpin = function() {
+        if (wheelSpinning) {
+            return;
+        }
+        resetWheel();
+
+        // Disable the spin button
+        document.getElementById('spin_button').src = SPIN_OFF_SRC;
+        document.getElementById('spin_button').className = "";
+        
+        if (isJandroMode()) {
+            // Always land in the first slice, but make it "look" random
+            // EX: for slice size = 60 we want an angle somewhere in [61, 119]
+            const SLICE_SIZE = 360 / NUM_SEGMENTS;
+            theWheel.animation.stopAngle = (SLICE_SIZE + 1) + Math.floor(Math.random() * (SLICE_SIZE - 1));
+        } else {
+            theWheel.animation.stopAngle = null;
+        }
+
+        theWheel.startAnimation(); // spin the wheel
+        document.getElementById("bottle_img").className = "rotating_img"; // spin the inner bottle
+        wheelSpinning = true;
+    };
+
+
+    // Get the wheel ready for another spin (potentially switch wheel type)
+    function resetWheel() {
+        // Re-initialize wheel object, but keep old rotation angle so it looks unchanged
+        let oldRotationAngle = theWheel.rotationAngle;
+        theWheel = getNewWheel(isJandroMode() ? jandroSlices : normalSlices);
+
+        // For the spin speed to work properly, the initial angle needs to be between 0 and 360
+        // See http://dougtesting.net/winwheel/docs/tut20_making_it_responsive
+        theWheel.rotationAngle = oldRotationAngle % 360;
+        theWheel.draw();
+
+        // Make the button clickable again
+        document.getElementById('spin_button').src = SPIN_ON_SRC;
+        document.getElementById('spin_button').className = "clickable";
+
+        // Revert back to a non-spinning image
+        document.getElementById("bottle_img").className = "";
+
+        // Re-load IP address info (IP might have changed since we last loaded the page)
+        setIPDetails();
+        wheelSpinning = false;
+    }
+
+
     // Send email using EmailJS (note that gmail might categorize the email as spam)
     function sendEmail(outcome) {
         let locationStr = null;
@@ -172,7 +173,7 @@
             locationStr = "Error finding IP address";
         } else {
             let location = ipDetails.location;
-            let locationStr = `${location.city}, ${location.region}, ${location.country} (from ${ipDetails.ip})`;
+            locationStr = `${location.city}, ${location.region}, ${location.country} (from ${ipDetails.ip})`;
         }
 
         // TODO: link to latitude / longtitude on google maps
@@ -187,11 +188,13 @@
             .catch((error) => console.error('FAILED...', error));
     }
 
+
     // HELPERS
 
     function isJandroMode() {
         return document.getElementById('jandro_checkbox').checked;
     }
+
 
     // Since `fetch()` doesn't "catch" HTTP errors, we need to handle them ourselves
     // GOTCHA: make sure to call this BEFORE you process the HTTP response
