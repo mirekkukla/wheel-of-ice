@@ -214,7 +214,8 @@
 
     // If running as static html, hostname is ""
     function runningLocally() {
-        return ["localhost", "127.0.0.1", ""].includes(window.location.hostname);
+        return false;
+        // return ["localhost", "127.0.0.1", ""].includes(window.location.hostname);
     }
 
 
