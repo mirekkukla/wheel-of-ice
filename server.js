@@ -3,7 +3,7 @@
 
 var express = require('express');
 var app = express();
-var port = 8080;
+var port = 3000;
 
 app.listen(port, function() {
   console.log('Server started');
