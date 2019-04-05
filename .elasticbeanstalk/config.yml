@@ -1,6 +1,6 @@
 branch-defaults:
   master:
-    environment: WheelOfIce-env
+    environment: wheel-of-ice
     group_suffix: null
 global:
   application_name: wheel-of-ice

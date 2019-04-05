@@ -3,6 +3,10 @@
 (function(){
     "use strict";
 
+    // TEMP: find a way to load these from localConf on the REMOTE server
+    window.GEO_KEY = "at_IUxTwRiCCI0kwGkZSDm3VGaWxF4LY";
+    window.EMAILJS_KEY = "user_8JLOO0Mj5SQ4um0RmAmTP";
+
     // External files
     const SRC_BASE = "https://raw.githubusercontent.com/zarocknz/javascript-winwheel/master/examples/wheel_of_fortune";
     const SPIN_ON_SRC = SRC_BASE + "/spin_on.png";
