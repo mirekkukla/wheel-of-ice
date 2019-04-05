@@ -1,17 +1,13 @@
 /* jshint node: true */
 "use strict";
 
- // server.js
 var express = require('express');
 var app = express();
 var port = 8080;
 
-// start the server
 app.listen(port, function() {
-  console.log('app started');
+  console.log('Server started');
 });
 
-// route our app
-app.get('/', function(req, res) {
-  res.send('hello world!');
-});
+// Server static pages located in script dir
+app.use(express.static(__dirname));
