@@ -1,0 +1,21 @@
+{
+  "name": "wheel-of-ice",
+  "version": "1.0.0",
+  "description": "Wheel of ICE",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mirekkukla/wheel-of-ice.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mirekkukla/wheel-of-ice/issues"
+  },
+  "homepage": "https://github.com/Mirekkukla/wheel-of-ice#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
