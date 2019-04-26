@@ -130,7 +130,7 @@
 
     // display the results modal with the given text
     function triggerPopup(text) {
-        $('#result_modal')[0].innerText = text;
+        $('#modal_text')[0].innerText = text;
         $('#result_modal').modal();
     }
 
