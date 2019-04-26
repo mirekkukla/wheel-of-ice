@@ -1,4 +1,4 @@
-/* global Winwheel, Audio, alert, gtag, fetch, emailjs */
+/* global Winwheel, Audio, alert, gtag, fetch, emailjs, $ */
 /* Adopted from http://dougtesting.net/winwheel/examples/wheel_of_fortune */
 (function(){
     "use strict";
@@ -197,7 +197,7 @@
         } else {
             let loc = ipDetails.location;
             locationStr = `${loc.city}, ${loc.region}, ${loc.country} (from ${ipDetails.ip})`;
-            mapsLink = `https://www.google.com/maps/@${loc.lat},${loc.lng},12z`
+            mapsLink = `https://www.google.com/maps/@${loc.lat},${loc.lng},12z`;
         }
 
         let templateParams = {
