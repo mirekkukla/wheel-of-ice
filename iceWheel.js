@@ -7,12 +7,6 @@
     window.GEO_KEY = "at_IUxTwRiCCI0kwGkZSDm3VGaWxF4LY";
     window.EMAILJS_KEY = "user_8JLOO0Mj5SQ4um0RmAmTP";
 
-    // External files
-    const SRC_BASE = "https://raw.githubusercontent.com/zarocknz/javascript-winwheel/master/examples/wheel_of_fortune";
-    const SPIN_ON_SRC = SRC_BASE + "/spin_on.png";
-    const SPIN_OFF_SRC = SRC_BASE + "/spin_off.png";
-    const AUDIO_SRC = SRC_BASE + "/tick.mp3";
-
     // API keys (either hard code them here or load them in the header of your index.html file)
     const GEO_KEY = window.GEO_KEY;
     const EMAILJS_KEY = window.EMAILJS_KEY;
@@ -45,7 +39,7 @@
     }
 
     // Think of these as instance variables
-    let audio = new Audio(AUDIO_SRC); // the ticking sound
+    let audio = new Audio("resources/tick.mp3"); // the ticking sound
     let theWheel = getNewWheel(normalSlices);
     let wheelSpinning = false;
     let ipDetails = null;
@@ -151,7 +145,7 @@
         resetWheel();
 
         // Disable the spin button
-        document.getElementById('spin_button').src = SPIN_OFF_SRC;
+        document.getElementById('spin_button').src = "resources/spin_off.png";
         document.getElementById('spin_button').className = ""; // TODO: add and remove
 
         if (isJandroMode()) {
@@ -181,7 +175,7 @@
         theWheel.draw();
 
         // Make the button clickable again
-        document.getElementById('spin_button').src = SPIN_ON_SRC;
+        document.getElementById('spin_button').src = "resources/spin_on.png";
         document.getElementById('spin_button').className = "clickable";
 
         // Revert back to a non-spinning image for bottle
