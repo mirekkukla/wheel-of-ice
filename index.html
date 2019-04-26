@@ -2,11 +2,16 @@
 <html>
     <head>
         <title>The Wheel of ICE</title>
+        <!-- wheel plugin -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/zarocknz/javascript-winwheel@master/Winwheel.js"></script>
+        <!-- email plugin -->
         <script src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
-        <!-- api keys must be loaded BEFORE you run iceWheel.js -->
-        <script src="localConfig.js"></script>
+        <!-- jquery modal, see https://jquerymodal.com-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+        <!-- my stuff, make sure not to load Winwheel object constructor in the header -->
         <link rel="stylesheet" type="text/css" href="iceWheel.css">
     </head>
     <body>
@@ -18,6 +23,11 @@
                     <p>FAIL: Your browser doesn't support canvas</p>
                 </canvas>
                 <img id="bottle_img" src="https://images.alko.fi/images/cs_srgb,f_auto,t_medium/cdn/742703/smirnoff-ice.jpg" alt="Spinning Bottle"/>
+            </div>
+
+            <!-- Result modal pops up once spin is done -->
+            <div id="result_modal" class="modal">
+                <p>This should have been set with innerText</p>
             </div>
 
             <div class="spin_box">

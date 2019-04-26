@@ -92,7 +92,7 @@
             }
         });
     }
-    
+
 
     // Called when the spin animation has finished
     function alertAndLog(indicatedSegment) {
@@ -116,17 +116,22 @@
             sendEmail(outcome);
         }
 
-        // TODO: use a nicer popup than alert
         if (cleanText === "Spin again") {
-            alert("LAAAAAAME. Try again.");
+            triggerPopup("LAAAAAAME. Try again.");
         } else if (cleanText === "ICE, BITCH") {
-            alert("OOOOOOOOOOOH SNAP! CHUG IIIIIIIT!");
+            triggerPopup("OOOOOOOOOOOH SNAP! CHUG IIIIIIIT!");
         } else {
-            alert(cleanText);
+            triggerPopup(cleanText);
         }
 
         // Reseting makes the "spin" button clickable again
         resetWheel();
+    }
+
+    // display the results modal with the given text
+    function triggerPopup(text) {
+        $('#result_modal')[0].innerText = text;
+        $('#result_modal').modal();
     }
 
 
@@ -148,7 +153,7 @@
         // Disable the spin button
         document.getElementById('spin_button').src = SPIN_OFF_SRC;
         document.getElementById('spin_button').className = "";
-        
+
         if (isJandroMode()) {
             // Always land in the first slice, but make it "look" random
             // EX: for slice size = 60 we want an angle somewhere in [61, 119]
