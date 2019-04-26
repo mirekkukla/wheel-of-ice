@@ -22,21 +22,11 @@ canvas {
     height: 454px;
 }
 
-#bottle_img {
-    display: block; /* Need for rotation to work */
-    max-width: 50px;
-
-    position: absolute;
-    /* TODO: don't hard-code these guys */
-    left: 192px;;
-    top: 150px;
-}
-
-/* Style applied to the bottle to make it spin */
-.rotating_img {
-    /* Rotate for one second less than the wheel, looks better this way */
-    -webkit-transition: -webkit-transform 8s ease-out;
-    -webkit-transform: rotate(-3240deg);
+/* Style applied to the results popup */
+#result_modal {
+    text-align: center;
+    font-size: 20px;
+    padding: 60px 0;
 }
 
 /* Style applied to the spin button to make it look clickable */
@@ -44,9 +34,50 @@ canvas {
     cursor: pointer;
 }
 
-/* Style applied to the results popup */
-#result_modal {
-    text-align: center;
-    font-size: 20px;
-    padding: 40px 0;
+/* A small image of a smirnoff bottle, meant to be spun */
+.bottle_img {
+    display: block; /* Need for rotation to work */
+    max-width: 50px;
+    position: absolute;
 }
+
+/* Center bottle spins for roughly as long as the wheel does */
+.fading_spin {
+    /* Rotate for one second less than the wheel, looks better this way */
+    -webkit-transition: -webkit-transform 8s ease-out;
+    -webkit-transform: rotate(-3240deg);
+}
+
+/* Bottles in the popup spin indefinitely */
+.forever_spin {
+    animation: rotation .8s infinite linear;
+}
+
+#center_bottle {
+    /* TODO: don't hard-code these guys */
+    left: 192px;;
+    top: 150px;
+}
+
+#left_modal_bottle {
+    /* TODO: don't hard-code these guys */
+    left: 50px;;
+    top: 6px;
+}
+
+#right_modal_bottle {
+    /* TODO: don't hard-code these guys */
+    left: 400px;;
+    top: 5px;
+}
+
+/* An indefinite rotation */
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
+

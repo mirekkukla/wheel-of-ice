@@ -152,7 +152,7 @@
 
         // Disable the spin button
         document.getElementById('spin_button').src = SPIN_OFF_SRC;
-        document.getElementById('spin_button').className = "";
+        document.getElementById('spin_button').className = ""; // TODO: add and remove
 
         if (isJandroMode()) {
             // Always land in the first slice, but make it "look" random
@@ -164,7 +164,7 @@
         }
 
         theWheel.startAnimation(); // spin the wheel
-        document.getElementById("bottle_img").className = "rotating_img"; // spin the inner bottle
+        document.getElementById("center_bottle").classList.add("fading_spin"); // spin the center bottle
         wheelSpinning = true;
     };
 
@@ -184,8 +184,8 @@
         document.getElementById('spin_button').src = SPIN_ON_SRC;
         document.getElementById('spin_button').className = "clickable";
 
-        // Revert back to a non-spinning image
-        document.getElementById("bottle_img").className = "";
+        // Revert back to a non-spinning image for bottle
+        document.getElementById("center_bottle").classList.remove("fading_spin");
 
         // Re-load IP address info (IP might have changed since we last loaded the page)
         setIPDetails();
