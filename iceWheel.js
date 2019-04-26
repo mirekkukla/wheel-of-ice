@@ -110,13 +110,7 @@
             sendEmail(outcome);
         }
 
-        if (cleanText === "Spin again") {
-            triggerPopup("LAAAAAAME. Try again.");
-        } else if (cleanText === "ICE, BITCH") {
-            triggerPopup("OOOOOOOOOOOH SNAP! CHUG IIIIIIIT!");
-        } else {
-            triggerPopup(cleanText);
-        }
+        triggerPopup(cleanText);
 
         // Reseting makes the "spin" button clickable again
         resetWheel();
@@ -146,7 +140,7 @@
 
         // Disable the spin button
         document.getElementById('spin_button').src = "resources/spin_off.png";
-        document.getElementById('spin_button').className = ""; // TODO: add and remove
+        document.getElementById('spin_button').classList.remove("clickable"); // TODO: add and remove
 
         if (isJandroMode()) {
             // Always land in the first slice, but make it "look" random
@@ -176,7 +170,7 @@
 
         // Make the button clickable again
         document.getElementById('spin_button').src = "resources/spin_on.png";
-        document.getElementById('spin_button').className = "clickable";
+        document.getElementById('spin_button').classList.add("clickable");
 
         // Revert back to a non-spinning image for bottle
         document.getElementById("center_bottle").classList.remove("fading_spin");

@@ -22,14 +22,14 @@ canvas {
     height: 454px;
 }
 
-/* Style applied to the results popup */
+/* The results popup */
 #result_modal {
     text-align: center;
     font-size: 20px;
     padding: 60px 0;
 }
 
-/* Style applied to the spin button to make it look clickable */
+/* Applied to the spin button to make it look clickable */
 .clickable {
     cursor: pointer;
 }
@@ -41,14 +41,14 @@ canvas {
     position: absolute;
 }
 
-/* Center bottle spins for roughly as long as the wheel does */
+/* Center bottle spins for about as long as the wheel does */
 .fading_spin {
     /* Rotate for one second less than the wheel, looks better this way */
     -webkit-transition: -webkit-transform 8s ease-out;
     -webkit-transform: rotate(-3240deg);
 }
 
-/* Bottles in the popup spin indefinitely */
+/* Bottles in the popup window spin indefinitely */
 .forever_spin {
     animation: rotation .8s infinite linear;
 }
