@@ -25,6 +25,14 @@
        {'fillStyle' : '#ad172b', 'text' : '\nYou win!'},
        {'fillStyle' : '#ffffff', 'text' : '\nYou win!'}];
 
+    const phlippySlices = [
+       {'fillStyle' : '#ad172b', 'text' : '\nNap time'},
+       {'fillStyle' : '#000000', 'text' : '\nSIPPY CUP,\nBITCH!', 'textFontSize' : 25, 'textFillStyle' : '#ffffff'},
+       {'fillStyle' : '#ad172b', 'text' : '\nYou made a poopy'},
+       {'fillStyle' : '#ffffff', 'text' : '\nWAAAAAAA'},
+       {'fillStyle' : '#ad172b', 'text' : '\nHere\'s your\npacifier'},
+       {'fillStyle' : '#ffffff', 'text' : '\nYou wetted\nthe bed'}];
+
     const normalSlices = [
        {'fillStyle' : '#ad172b', 'text' : '\nSpin again'},
        {'fillStyle' : '#000000', 'text' : '\nICE, BITCH!', 'textFontSize' : 25, 'textFillStyle' : '#ffffff'},
@@ -45,13 +53,20 @@
     let ipDetails = null;
     setIPDetails();
 
-    // Add listener to philly mode checkbox
+    // Add listeners to checkboxes
+    let jandroCheckbox = document.querySelector("#jandro_checkbox");
+    jandroCheckbox.addEventListener('change', function() {
+        resetWheel();
+    });
+
     let phlippyCheckbox = document.querySelector("#phlippy_checkbox");
     phlippyCheckbox.addEventListener('change', function() {
         if(this.checked) {
             changeBottlesSrc("resources/baby_bottle.jpg");
+            resetWheel();
         } else {
             changeBottlesSrc("resources/ice_bottle.jpg");
+            resetWheel();
         }
     });
 
@@ -178,7 +193,13 @@
     function resetWheel() {
         // Re-initialize wheel object, but keep old rotation angle so it looks unchanged
         let oldRotationAngle = theWheel.rotationAngle;
-        theWheel = getNewWheel(isJandroMode() ? jandroSlices : normalSlices);
+        if (isJandroMode()) {
+            theWheel = getNewWheel(jandroSlices);
+        } else if (isPhlippyMode()) {
+            theWheel = getNewWheel(phlippySlices);
+        } else {
+            theWheel = getNewWheel(normalSlices);
+        }
 
         // For the spin speed to work properly, the initial angle needs to be between 0 and 360
         // See http://dougtesting.net/winwheel/docs/tut20_making_it_responsive
