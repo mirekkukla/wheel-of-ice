@@ -29,6 +29,10 @@ canvas {
     padding: 60px 0;
 }
 
+#crying_baby {
+    max-width: 480px;
+}
+
 /* Applied to the spin button to make it look clickable */
 .clickable {
     cursor: pointer;
