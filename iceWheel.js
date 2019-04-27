@@ -45,6 +45,23 @@
     let ipDetails = null;
     setIPDetails();
 
+    // Add listener to philly mode checkbox
+    let phlippyCheckbox = document.querySelector("#phlippy_checkbox");
+    phlippyCheckbox.addEventListener('change', function() {
+        if(this.checked) {
+            changeBottlesSrc("resources/baby_bottle.jpg");
+        } else {
+            changeBottlesSrc("resources/ice_bottle.jpg");
+        }
+    });
+
+    // Change the src attribute of all bottle images to the given string
+    function changeBottlesSrc(newSourceStr) {
+        let bottles = document.querySelectorAll(".bottle_img");
+        for (let bottle of bottles) {
+            bottle.src = newSourceStr;
+        }
+    }
 
     // Get the IP, use it to get geo info, and set the `ipDetails` instance var
     function setIPDetails() {
@@ -220,6 +237,12 @@
     function isJandroMode() {
         return document.getElementById('jandro_checkbox').checked;
     }
+
+    // "Phlppy mode" checkbox is checked
+    function isPhlippyMode() {
+        return document.getElementById('phlippy_checkbox').checked;
+    }
+
 
 
     // Since `fetch()` doesn't "catch" HTTP errors, we need to handle them ourselves

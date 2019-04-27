@@ -34,10 +34,10 @@ canvas {
     cursor: pointer;
 }
 
-/* A small image of a smirnoff bottle, meant to be spun */
+/* A small image of a (smirnoff / baby) bottle, meant to be spun */
 .bottle_img {
     display: block; /* Need for rotation to work */
-    max-width: 50px;
+    max-height: 134px;
     position: absolute;
 }
 
