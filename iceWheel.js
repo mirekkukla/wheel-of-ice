@@ -61,13 +61,7 @@
 
     let phlippyCheckbox = document.querySelector("#phlippy_checkbox");
     phlippyCheckbox.addEventListener('change', function() {
-        if(this.checked) {
-            changeBottlesSrc("resources/baby_bottle.jpg");
-            resetWheel();
-        } else {
-            changeBottlesSrc("resources/ice_bottle.jpg");
-            resetWheel();
-        }
+        resetWheel();
     });
 
     // Change the src attribute of all bottle images to the given string
@@ -199,6 +193,13 @@
             theWheel = getNewWheel(phlippySlices);
         } else {
             theWheel = getNewWheel(normalSlices);
+        }
+
+        // Set the desired bottle image
+        if (isPhlippyMode()) {
+            changeBottlesSrc("resources/baby_bottle.jpg");
+        } else {
+            changeBottlesSrc("resources/ice_bottle.jpg");
         }
 
         // For the spin speed to work properly, the initial angle needs to be between 0 and 360
