@@ -118,6 +118,9 @@
     function alertAndLog(indicatedSegment) {
         let cleanText = indicatedSegment.text.trim("\n").replace(/\n/g, " ");
         let outcome = isJandroMode() ? cleanText + " (Jandro mode)" : cleanText;
+        if (isPhlippyMode) {
+            outcome += " (Phlippy mode)";
+        }
 
         // Google analytics
         if (reportingDisabled()) {
