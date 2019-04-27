@@ -190,10 +190,10 @@
     function resetWheel() {
         // Re-initialize wheel object, but keep old rotation angle so it looks unchanged
         let oldRotationAngle = theWheel.rotationAngle;
-        if (isJandroMode()) {
-            theWheel = getNewWheel(jandroSlices);
-        } else if (isPhlippyMode()) {
+        if (isPhlippyMode()) { // phlippy mode slices take precedence over jandro mode
             theWheel = getNewWheel(phlippySlices);
+        } else if (isJandroMode()) {
+            theWheel = getNewWheel(jandroSlices);
         } else {
             theWheel = getNewWheel(normalSlices);
         }
