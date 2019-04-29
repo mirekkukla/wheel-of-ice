@@ -13,9 +13,13 @@ let app = express();
 app.use(express.static(__dirname));
 
 // Get geographical info using callers IP
+// TODO: move to axios (http://tiny.cc/0nrx5y and http://tiny.cc/qnrx5y)
 app.get('/geo_info', function(req, res) {
-  console.log("Called geo_info, IP is " + req.ip);
-  fetch(`https://geo.ipify.org/api/v1?apiKey=${GEO_KEY}&ipAddress=${req.ip}`)
+  // Careful: req.ip doesn't work if we're behind an nginx proxy!
+  // https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
+  let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+  console.log("Called geo_info, IP is " + ip);
+  fetch(`https://geo.ipify.org/api/v1?apiKey=${GEO_KEY}&ipAddress=${ip}`)
     .then(handleFetchErrors)
     .then(response => response.json())
     .then(json => res.send(json))
