@@ -1,15 +1,10 @@
-/* global Winwheel, Audio, alert, gtag, fetch, emailjs, $ */
+/* global Winwheel, Audio, gtag, fetch, emailjs, $ */
 /* Adopted from http://dougtesting.net/winwheel/examples/wheel_of_fortune */
 (function(){
     "use strict";
 
-    // TEMP: find a way to load these from localConf on the REMOTE server
-    window.GEO_KEY = "at_IUxTwRiCCI0kwGkZSDm3VGaWxF4LY";
-    window.EMAILJS_KEY = "user_8JLOO0Mj5SQ4um0RmAmTP";
-
     // API keys (either hard code them here or load them in the header of your index.html file)
-    const GEO_KEY = window.GEO_KEY;
-    const EMAILJS_KEY = window.EMAILJS_KEY;
+    const EMAILJS_KEY = "user_8JLOO0Mj5SQ4um0RmAmTP";
     const EMAIL_JS_TEMPATE = "wheel_of_ice";
 
     // Audio
@@ -67,12 +62,11 @@
         resetWheel();
     });
 
-    // Get the IP, use it to get geo info, and set the `ipDetails` instance var
+
+    // Get the users' geo info based on IP and set the `ipDetails` instance var
+    // Format is as given for https://geo.ipify.org/api/v1
     function setIPDetails() {
-        fetch("https://api.ipify.org?format=json")
-            .then(handleFetchErrors)
-            .then(response => response.json())
-            .then(json => fetch(`https://geo.ipify.org/api/v1?apiKey=${GEO_KEY}&ipAddress=${json.ip}`))
+        fetch("/geo_info")
             .then(handleFetchErrors)
             .then(response => response.json())
             .then(json => {
@@ -276,8 +270,6 @@
     function isPhlippyMode() {
         return document.getElementById('phlippy_checkbox').checked;
     }
-
-
 
     // Since `fetch()` doesn't "catch" HTTP errors, we need to handle them ourselves
     // GOTCHA: make sure to call this BEFORE you process the HTTP response

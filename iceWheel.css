@@ -75,7 +75,7 @@ canvas {
     top: 5px;
 }
 
-/* An indefinite rotation */
+/* An full rotation */
 @keyframes rotation {
   from {
     transform: rotate(0deg);
