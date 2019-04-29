@@ -143,6 +143,7 @@
 
     // Display the results modal with the given text
     function triggerPopup(text) {
+        $("#crying_baby")[0].style.display = isPhlippyMode() ? "" : "none";
         $('#modal_text')[0].innerText = text;
         $('#result_modal').modal();
         if (isPhlippyMode()) {
