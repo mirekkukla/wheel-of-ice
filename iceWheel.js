@@ -12,6 +12,10 @@
     const EMAILJS_KEY = window.EMAILJS_KEY;
     const EMAIL_JS_TEMPATE = "wheel_of_ice";
 
+    // Audio
+    const TICK_SOUND = new Audio("resources/tick.mp3");
+    const CRYING_SOUND = new Audio("resources/crying.mp3");
+
     // Wheel constants
     const NUM_SEGMENTS = 6;
     const NUM_SPINS = 5;
@@ -47,7 +51,6 @@
     }
 
     // Think of these as instance variables
-    let audio = new Audio("resources/tick.mp3"); // the ticking sound
     let theWheel = getNewWheel(normalSlices);
     let wheelSpinning = false;
     let ipDetails = null;
@@ -63,14 +66,6 @@
     phlippyCheckbox.addEventListener('change', function() {
         resetWheel();
     });
-
-    // Change the src attribute of all bottle images to the given string
-    function changeBottlesSrc(newSourceStr) {
-        let bottles = document.querySelectorAll(".bottle_img");
-        for (let bottle of bottles) {
-            bottle.src = newSourceStr;
-        }
-    }
 
     // Get the IP, use it to get geo info, and set the `ipDetails` instance var
     function setIPDetails() {
@@ -102,7 +97,7 @@
                 'duration' : SPIN_DURATION,   // duration in seconds
                 'spins'    : NUM_SPINS,       // default number of complete spins
                 'callbackFinished' : alertAndLog, // function to call when wheel has finished spinning
-                'callbackSound'    : playSound,   // function to call when the tick sound is to be triggered
+                'callbackSound'    : playTick,   // function to call when the tick sound is to be triggered
                 'soundTrigger'     : 'pin'        // specify pins are to trigger the sound, the other option is 'segment'
             },
             'pins': {
@@ -145,18 +140,31 @@
         resetWheel();
     }
 
-    // display the results modal with the given text
+
+    // Display the results modal with the given text
     function triggerPopup(text) {
         $('#modal_text')[0].innerText = text;
         $('#result_modal').modal();
+        if (isPhlippyMode()) {
+            CRYING_SOUND.play();
+        }
     }
 
 
     // Play a single "click"
-    function playSound() {
-        audio.pause(); // reset sound in case it's already playing
-        audio.currentTime = 0;
-        audio.play();
+    function playTick() {
+        TICK_SOUND.pause(); // reset sound in case it's already playing
+        TICK_SOUND.currentTime = 0;
+        TICK_SOUND.play();
+    }
+
+
+    // Change the src attribute of all bottle images to the given string
+    function changeBottlesSrc(newSourceStr) {
+        let bottles = document.querySelectorAll(".bottle_img");
+        for (let bottle of bottles) {
+            bottle.src = newSourceStr;
+        }
     }
 
 
