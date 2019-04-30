@@ -17,7 +17,8 @@ app.use(express.static(__dirname));
 app.get('/geo_info', function(req, res) {
   // Careful: req.ip doesn't work if we're behind an nginx proxy!
   // https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
-  let ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+  let raw_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+  let ip = raw_ip.split(",")[0].trim();
   console.log("Called geo_info, IP is " + ip);
   fetch(`https://geo.ipify.org/api/v1?apiKey=${GEO_KEY}&ipAddress=${ip}`)
     .then(handleFetchErrors)
