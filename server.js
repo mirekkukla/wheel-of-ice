@@ -3,14 +3,12 @@
 
 let express = require('express');
 let fetch = require('node-fetch');
-let emailjs = require('emailjs-com');
 
 const PORT = 8081;
 const GEO_KEY = "at_IUxTwRiCCI0kwGkZSDm3VGaWxF4LY";
 const EMAILJS_KEY = "user_8JLOO0Mj5SQ4um0RmAmTP";
 const EMAIL_JS_TEMPATE = "wheel_of_ice";
 
-emailjs.init(EMAILJS_KEY);
 let app = express();
 
 // Server static pages located in script dir
@@ -50,6 +48,14 @@ app.get('/send_email', (req, res) => {
     })
     .then(() => res.send(stashedGeoInfo)) // do we have access to it here?
     .catch(error => console.error(error));
+});
+
+app.get('/test', (req, res) => {
+
+  fetch('http://httpstat.us/304')
+    .then(handleFetchErrors)
+    .then(response => console.log("r is " + response.json()))
+    .catch(error => console.error("e is " + error));
 });
 
 
