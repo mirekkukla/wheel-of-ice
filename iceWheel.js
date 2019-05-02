@@ -3,10 +3,6 @@
 (function(){
     "use strict";
 
-    // API keys (either hard code them here or load them in the header of your index.html file)
-    const EMAILJS_KEY = "user_8JLOO0Mj5SQ4um0RmAmTP";
-    const EMAIL_JS_TEMPATE = "wheel_of_ice";
-
     // Audio
     const TICK_SOUND = new Audio("resources/tick.mp3");
     const CRYING_SOUND = new Audio("resources/crying.mp3");
@@ -14,7 +10,7 @@
     // Wheel constants
     const NUM_SEGMENTS = 6;
     const NUM_SPINS = 5;
-    const SPIN_DURATION = 10;
+    const SPIN_DURATION = 1;
 
     const jandroSlices = [
        {'fillStyle' : '#ad172b', 'text' : '\nYou win!'},
@@ -39,11 +35,6 @@
        {'fillStyle' : '#ffffff', 'text' : '\nEveryone owes\nyou $5'},
        {'fillStyle' : '#ad172b', 'text' : '\nYou owe\neveryone $3'},
        {'fillStyle' : '#ffffff', 'text' : '\nChug a beer'}];
-
-    // Setup emailjs client
-    if (!reportingDisabled()) {
-        emailjs.init(EMAILJS_KEY);
-    }
 
     // Think of these as instance variables
     let theWheel = getNewWheel(normalSlices);
@@ -122,16 +113,26 @@
         }
 
         // Email notifications
-        if (reportingDisabled()) {
-            console.log("Reporting disabled, not sending email");
-        } else {
+        // if (reportingDisabled()) {
+            // console.log("Reporting disabled, not sending email");
+        // } else {
             sendEmail(outcome);
-        }
+        // }
 
         triggerPopup(cleanText);
 
         // Reseting makes the "spin" button clickable again
         resetWheel();
+    }
+
+    function sendEmail(outcome) {
+        fetch("/send_email?outcome=" + outcome)
+            .then(handleFetchErrors)
+            .then(response => response.json())
+            .then(json => {
+                console.log("IP details: " + JSON.stringify(json));
+                ipDetails = json;
+            }).catch(error => console.log(error));
     }
 
 
@@ -225,33 +226,6 @@
         wheelSpinning = false;
     }
 
-
-    // Send email using EmailJS (note that gmail might categorize the email as spam)
-    function sendEmail(outcome) {
-        let locationStr = null;
-        let mapsLink = null;
-        if (ipDetails === null) {
-            console.warn("IP details haven't been set yet, investigate");
-            locationStr = "Error finding IP address";
-        } else {
-            let loc = ipDetails.location;
-            locationStr = `${loc.city}, ${loc.region}, ${loc.country} (from ${ipDetails.ip})`;
-            mapsLink = `https://www.google.com/maps/@${loc.lat},${loc.lng},12z`;
-        }
-
-        let templateParams = {
-            location: locationStr,
-            outcome: outcome,
-            maps_link: mapsLink
-        };
-
-        console.log (`Sending email with params '${JSON.stringify(templateParams)}' to EmailJS`);
-        emailjs.send('sendgrid', EMAIL_JS_TEMPATE, templateParams)
-            .then((response) => console.log('SUCCESS!', response.status, response.text))
-            .catch((error) => console.error('FAILED...', error));
-    }
-
-
     // HELPERS
 
 
@@ -259,7 +233,6 @@
     function reportingDisabled() {
         return ["localhost", "127.0.0.1", ""].includes(window.location.hostname);
     }
-
 
     // "Jandro mode" checkbox is checked
     function isJandroMode() {
