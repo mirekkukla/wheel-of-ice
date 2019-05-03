@@ -51,11 +51,12 @@ app.get('/send_email', (req, res) => {
 });
 
 app.get('/test', (req, res) => {
-
-  fetch('http://httpstat.us/304')
+  fetch('http://asdkfjhasdfas.com')
     .then(handleFetchErrors)
-    .then(response => console.log("r is " + response.json()))
-    .catch(error => console.error("e is " + error));
+    .then(response => response.text())
+    .then(text => console.log("r is " + text))
+    .catch(error => console.error("e is " + error))
+    .finally(res.send("See node console"));
 });
 
 
@@ -81,7 +82,10 @@ function sendEmail(outcome, geoInfo) {
     console.log(`Sending email with params '${JSON.stringify(templateParams)}' to EmailJS`);
     return fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
-      body: JSON.stringify(emailJSData)
+      body: JSON.stringify(emailJSData),
+      // might need this?
+      // https://medium.com/cameron-nokes/4-common-mistakes-front-end-developers-make-when-using-fetch-1f974f9d1aa1
+      // headers: {'Content-Type': 'application/json'}
     })
       .then(handleFetchErrors)
       .then(response => response.json())
@@ -108,10 +112,10 @@ app.listen(PORT, () => {
 // https://stackoverflow.com/questions/950087/how-do-i-include-a-javascript-file-in-another-javascript-file
 // https://medium.com/the-node-js-collection/an-update-on-es6-modules-in-node-js-42c958b890c
 function handleFetchErrors(response) {
-  // clone the response and extract text from clone, in case of a response failure
-  return Promise.all([response.ok, response.clone().text()])
-    .then(([responseOk, bodyTxt]) => {
-      if (!responseOk) {
+  // 'clone' so we can still read the original `response` downstream)
+  return response.clone().text()
+    .then(bodyTxt => {
+      if (!response.ok) {
         throw new Error(`status: '${response.status}', body: '${bodyTxt}'`);
       }
       return response;
