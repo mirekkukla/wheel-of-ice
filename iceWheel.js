@@ -10,7 +10,7 @@
     // Wheel constants
     const NUM_SEGMENTS = 6;
     const NUM_SPINS = 5;
-    const SPIN_DURATION = 1;
+    const SPIN_DURATION = 10;
 
     const jandroSlices = [
        {'fillStyle' : '#ad172b', 'text' : '\nYou win!'},
@@ -235,7 +235,6 @@
 
     // Disable reporting if running locally (if running as static html, hostname is "")
     function reportingDisabled() {
-        return false;
         return ["localhost", "127.0.0.1", ""].includes(window.location.hostname);
     }
 
