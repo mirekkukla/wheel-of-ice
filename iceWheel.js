@@ -61,7 +61,7 @@
             .then(handleFetchErrors)
             .then(response => response.json())
             .then(json => {
-                console.log("IP details: " + JSON.stringify(json));
+                console.log("IP details set to: " + JSON.stringify(json));
                 ipDetails = json;
             }).catch(error => console.log(error));
     }
@@ -113,11 +113,11 @@
         }
 
         // Email notifications
-        // if (reportingDisabled()) {
-            // console.log("Reporting disabled, not sending email");
-        // } else {
+        if (reportingDisabled()) {
+            console.log("Reporting disabled, not sending email");
+        } else {
             sendEmail(outcome);
-        // }
+        }
 
         triggerPopup(cleanText);
 
@@ -125,14 +125,18 @@
         resetWheel();
     }
 
+    // Send an email indicating the spin outcome
     function sendEmail(outcome) {
-        fetch("/send_email?outcome=" + outcome)
+        let payload = {outcome: outcome};
+        fetch("/send_email", {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {'Content-Type': 'application/json'}
+        })
             .then(handleFetchErrors)
             .then(response => response.json())
-            .then(json => {
-                console.log("IP details: " + JSON.stringify(json));
-                ipDetails = json;
-            }).catch(error => console.log(error));
+            .then(json => console.log(JSON.stringify(json)))
+            .catch(error => console.log(error));
     }
 
 
@@ -231,6 +235,7 @@
 
     // Disable reporting if running locally (if running as static html, hostname is "")
     function reportingDisabled() {
+        return false;
         return ["localhost", "127.0.0.1", ""].includes(window.location.hostname);
     }
 

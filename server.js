@@ -13,33 +13,49 @@ let app = express();
 
 // Server static pages located in script dir
 app.use(express.static(__dirname));
+app.use(express.json());
 
 // Get geographical info using callers IP
 app.get('/geo_info', (req, res) => {
+  console.log("GET /geo_info " + req.header('Content-Type'));
   fetchGeo(req)
     .then(geoInfoJson => res.send(geoInfoJson))
     .catch(error => console.error(error));
 });
 
 // Trigger the sending of an email via emailjs
-// Route require query parameter `?outcome=XYZ`
-// TODO: make POST
-app.get('/send_email', (req, res) => {
-  // TODO: check to make sure query param exists, respond accordingly if not
+// Post body should be `{'outcome': 'description of spin outcome'}`
+app.post('/send_email', (req, res) => {
+  console.log("POST /send_email");
 
-  let outcome = req.query.outcome;
-  if (!outcome) {
-    throw new Error('Send email route called without an "outcome" parameter');
+  // It's easy to forget you need to set Content-Type if
+  // you're using `fetch` on the front-end
+  let contentHeader = req.header('Content-Type');
+  if (contentHeader !== "application/json") {
+    let errorMsg = `Content-Type header must be 'application/json' (${contentHeader})`;
+    res.status("400").json({error: errorMsg});
+    throw new Error(errorMsg);
   }
-  console.log(`Send email route called, outcome param is '${outcome}'`);
 
-  let stashedGeoInfo = null;
+  // Sanity check the body content
+  let bodyStr = JSON.stringify(req.body);
+  let outcome = req.body.outcome;
+  if (!outcome) {
+    let errorMsg = `Missing or empty missing 'outcome' parameter (${bodyStr})`;
+    res.status("400").json({error: errorMsg});
+    throw new Error(errorMsg);
+  }
+
+  console.log(`Sending email with outcome ${outcome}`);
   fetchGeo(req)
-    .then(geoInfoJson => {
-      stashedGeoInfo = geoInfoJson;
-      return sendEmail(outcome, geoInfoJson);
+    .then(geoInfoJson => sendEmail(outcome, geoInfoJson))
+    .then(templateParams => {
+      let payload = {
+        message: "Email succesfull sent",
+        template_params: templateParams
+      };
+      res.send(payload);
     })
-    .then(() => res.send(stashedGeoInfo))
     .catch(error => console.error(error));
 });
 
@@ -63,6 +79,7 @@ function fetchGeo(req) {
 
 
 // Send email using EmailJS (note that gmail might categorize the email as spam)
+// Returns a promise chain where the final promise contains the email template params
 function sendEmail(outcome, geoInfo) {
     let loc = geoInfo.location;
     let locationStr = `${loc.city}, ${loc.region}, ${loc.country} (from ${geoInfo.ip})`;
@@ -90,6 +107,7 @@ function sendEmail(outcome, geoInfo) {
       .then(handleFetchErrors)
       .then(response => response.text())
       .then(text => console.log('EMAIL SUCCESS!', text))
+      .then(_ => templateParams)
       .catch(error => console.error('EMAIL FAILED...', error));
 }
 
