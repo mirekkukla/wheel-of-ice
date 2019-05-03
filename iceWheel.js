@@ -1,4 +1,4 @@
-/* global Winwheel, Audio, gtag, fetch, emailjs, $ */
+/* global Winwheel, Audio, gtag, fetch, $ */
 /* Adopted from http://dougtesting.net/winwheel/examples/wheel_of_fortune */
 (function(){
     "use strict";
@@ -173,7 +173,7 @@
 
         // Disable the spin button
         document.getElementById('spin_button').src = "resources/spin_off.png";
-        document.getElementById('spin_button').classList.remove("clickable"); // TODO: add and remove
+        document.getElementById('spin_button').classList.remove("clickable");
 
         if (isJandroMode()) {
             // Always land in the first slice, but make it "look" random
@@ -248,10 +248,14 @@
     // GOTCHA: make sure to call this BEFORE you process the HTTP response
     // GOTCHA: don't use this with the emailjs.send() promise, which doesn't use `fetch()`
     function handleFetchErrors(response) {
-        if (!response.ok) {
-            throw Error(response.statusText);
-        }
-        return response;
-    }
+      // 'clone' so we can still read the original `response` downstream)
+      return response.clone().text()
+        .then(bodyTxt => {
+          if (!response.ok) {
+            throw new Error(`status: '${response.status}', body: '${bodyTxt}'`);
+          }
+          return response;
+        });
+}
 
 })();

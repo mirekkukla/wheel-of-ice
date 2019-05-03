@@ -21,15 +21,8 @@ app.get('/geo_info', (req, res) => {
     .catch(error => console.error(error));
 });
 
-// TODO: move from fetch to axios (http://tiny.cc/0nrx5y and http://tiny.cc/qnrx5y)
-function fetchGeo(req) {
-  let ip = getRequestIP(req);
-  console.log("Fetching geo info for IP " + ip);
-  let url = `https://geo.ipify.org/api/v1?apiKey=${GEO_KEY}&ipAddress=${ip}`;
-  return fetch(url).then(handleFetchErrors).then(response => response.json());
-}
-
-// require query parameter `?outcome=XYZ``
+// Trigger the sending of an email via emailjs
+// Route require query parameter `?outcome=XYZ`
 // TODO: make POST
 app.get('/send_email', (req, res) => {
   // TODO: check to make sure query param exists, respond accordingly if not
@@ -50,14 +43,23 @@ app.get('/send_email', (req, res) => {
     .catch(error => console.error(error));
 });
 
-app.get('/test', (req, res) => {
-  fetch('http://asdkfjhasdfas.com')
-    .then(handleFetchErrors)
-    .then(response => response.text())
-    .then(text => console.log("r is " + text))
-    .catch(error => console.error("e is " + error))
-    .finally(res.send("See node console"));
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
 });
+
+
+// HELPERS
+
+// TODO: move from fetch to axios (http://tiny.cc/0nrx5y and http://tiny.cc/qnrx5y)
+function fetchGeo(req) {
+  // Careful: req.ip doesn't work if we're behind an nginx proxy!
+  // https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
+  let raw_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+  let ip = raw_ip.split(",")[0].trim();
+  console.log("Fetching geo info for IP " + ip);
+  let url = `https://geo.ipify.org/api/v1?apiKey=${GEO_KEY}&ipAddress=${ip}`;
+  return fetch(url).then(handleFetchErrors).then(response => response.json());
+}
 
 
 // Send email using EmailJS (note that gmail might categorize the email as spam)
@@ -86,23 +88,13 @@ function sendEmail(outcome, geoInfo) {
       headers: {'Content-Type': 'application/json'}
     })
       .then(handleFetchErrors)
-      .then(response => response.json())
-      .then(json => console.log('EMAIL SUCCESS!', json))
+      .then(response => response.text())
+      .then(text => console.log('EMAIL SUCCESS!', text))
       .catch(error => console.error('EMAIL FAILED...', error));
 }
 
-// HELPERS AND UTILS
 
-function getRequestIP(req) {
-  // Careful: req.ip doesn't work if we're behind an nginx proxy!
-  // https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
-  let raw_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
-  return raw_ip.split(",")[0].trim();
-}
-
-app.listen(PORT, () => {
-  console.log(`Server started on port ${PORT}`);
-});
+// UTILS
 
 // Since `fetch()` doesn't "catch" HTTP errors, we need to handle them ourselves
 // TODO: share code with front-end
