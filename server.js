@@ -46,7 +46,7 @@ app.get('/send_email', (req, res) => {
       stashedGeoInfo = geoInfoJson;
       return sendEmail(outcome, geoInfoJson);
     })
-    .then(() => res.send(stashedGeoInfo)) // do we have access to it here?
+    .then(() => res.send(stashedGeoInfo))
     .catch(error => console.error(error));
 });
 
@@ -83,9 +83,7 @@ function sendEmail(outcome, geoInfo) {
     return fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST',
       body: JSON.stringify(emailJSData),
-      // might need this?
-      // https://medium.com/cameron-nokes/4-common-mistakes-front-end-developers-make-when-using-fetch-1f974f9d1aa1
-      // headers: {'Content-Type': 'application/json'}
+      headers: {'Content-Type': 'application/json'}
     })
       .then(handleFetchErrors)
       .then(response => response.json())
