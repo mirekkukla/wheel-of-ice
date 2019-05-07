@@ -51,6 +51,7 @@ app.post('/send_email', (req, res) => {
     .catch(error => {
       console.log("Geo fetch failed , error below. Continuing with email logic");
       console.error(error);
+
       const errMsg = "geo fetching error";
       let fakeGeoJson = {
         ip: getIP(req),
@@ -62,6 +63,7 @@ app.post('/send_email', (req, res) => {
           lng: errMsg
         }
       };
+
       return fakeGeoJson;
     })
     .then(geoInfoJson => sendEmail(outcome, geoInfoJson))
