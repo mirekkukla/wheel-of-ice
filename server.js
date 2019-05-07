@@ -48,7 +48,24 @@ app.post('/send_email', (req, res) => {
 
   console.log(`Sending email with outcome ${outcome}`);
   fetchGeo(req)
+    .catch(error => {
+      console.log("Geo fetch failed , error below. Continuing with email logic");
+      console.error(error);
+      const errMsg = "geo fetching error";
+      let fakeGeoJson = {
+        ip: getIP(req),
+        location: {
+          city: errMsg,
+          region: errMsg,
+          country: errMsg,
+          lat: errMsg,
+          lng: errMsg
+        }
+      };
+      return fakeGeoJson;
+    })
     .then(geoInfoJson => sendEmail(outcome, geoInfoJson))
+
     .then(templateParams => {
       let payload = {
         message: "Email succesfull sent",
@@ -70,11 +87,15 @@ app.listen(PORT, () => {
 function fetchGeo(req) {
   // Careful: req.ip doesn't work if we're behind an nginx proxy!
   // https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
-  let raw_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
-  let ip = raw_ip.split(",")[0].trim();
+  let ip = getIP(req);
   console.log("Fetching geo info for IP " + ip);
   let url = `https://geo.ipify.org/api/v1?apiKey=${GEO_KEY}&ipAddress=${ip}`;
   return fetch(url).then(handleFetchErrors).then(response => response.json());
+}
+
+function getIP(req) {
+  let raw_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
+  return raw_ip.split(",")[0].trim();
 }
 
 
