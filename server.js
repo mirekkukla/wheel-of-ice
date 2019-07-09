@@ -17,7 +17,7 @@ app.use(express.json());
 
 // Get geographical info using callers IP
 app.get('/geo_info', (req, res) => {
-  console.log("GET /geo_info");
+  console.log("GET /geo_info " + getIP(req));
   fetchGeo(req)
     .then(geoInfoJson => res.send(geoInfoJson))
     .catch(error => {
@@ -30,7 +30,7 @@ app.get('/geo_info', (req, res) => {
 // Trigger the sending of an email via emailjs
 // Post body should be `{'outcome': 'description of spin outcome'}`
 app.post('/send_email', (req, res) => {
-  console.log("POST /send_email");
+  console.log("POST /send_email " + getIP(req));
 
   // It's easy to forget you need to set Content-Type if
   // you're using `fetch` on the front-end

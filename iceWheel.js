@@ -39,8 +39,6 @@
     // Think of these as instance variables
     let theWheel = getNewWheel(normalSlices);
     let wheelSpinning = false;
-    let ipDetails = null;
-    setIPDetails();
 
     // Add listeners to checkboxes
     let jandroCheckbox = document.querySelector("#jandro_checkbox");
@@ -52,19 +50,6 @@
     phlippyCheckbox.addEventListener('change', function() {
         resetWheel();
     });
-
-
-    // Get the users' geo info based on IP and set the `ipDetails` instance var
-    // Format is as given for https://geo.ipify.org/api/v1
-    function setIPDetails() {
-        fetch("/geo_info")
-            .then(handleFetchErrors)
-            .then(response => response.json())
-            .then(json => {
-                console.log("IP details set to: " + JSON.stringify(json));
-                ipDetails = json;
-            }).catch(error => console.log(error));
-    }
 
 
     // Get a new Winwheel object
@@ -225,8 +210,6 @@
         // Revert back to a non-spinning image for bottle
         document.getElementById("center_bottle").classList.remove("fading_spin");
 
-        // Re-load IP address info (IP might have changed since we last loaded the page)
-        setIPDetails();
         wheelSpinning = false;
     }
 
