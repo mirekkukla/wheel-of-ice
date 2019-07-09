@@ -89,7 +89,7 @@
 
         // Google analytics
         if (debugMode()) {
-            console.log("Reporting disabled, not sending data to analytics");
+            console.log("In debug mode, not sending data to analytics");
         } else if (!("gtag" in window)) {
             console.warn("Analytics not setup");
         } else {
@@ -98,11 +98,7 @@
         }
 
         // Email notifications
-        if (debugMode()) {
-            console.log("Reporting disabled, not sending email");
-        } else {
-            sendEmail(outcome);
-        }
+        sendEmail(outcome);
 
         triggerPopup(cleanText);
 
@@ -112,8 +108,14 @@
 
     // Send an email indicating the spin outcome
     function sendEmail(outcome) {
+        let paramSuffix = "";
+        if (debugMode()) {
+            console.log("In debug mode, calling send_email with '?testRun=1'");
+            paramSuffix += "?testRun=1";
+        }
         let payload = {outcome: outcome};
-        fetch("/send_email", {
+        let postUrl = "/send_email" + paramSuffix;
+        fetch(postUrl, {
             method: 'POST',
             body: JSON.stringify(payload),
             headers: {'Content-Type': 'application/json'}
