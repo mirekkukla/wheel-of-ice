@@ -10,7 +10,7 @@
     // Wheel constants
     const NUM_SEGMENTS = 6;
     const NUM_SPINS = 5;
-    const SPIN_DURATION = 10;
+    const SPIN_DURATION = debugMode ? 1 : 10;
 
     const jandroSlices = [
        {'fillStyle' : '#ad172b', 'text' : '\nYou win!'},
@@ -88,7 +88,7 @@
         }
 
         // Google analytics
-        if (reportingDisabled()) {
+        if (debugMode()) {
             console.log("Reporting disabled, not sending data to analytics");
         } else if (!("gtag" in window)) {
             console.warn("Analytics not setup");
@@ -98,7 +98,7 @@
         }
 
         // Email notifications
-        if (reportingDisabled()) {
+        if (debugMode()) {
             console.log("Reporting disabled, not sending email");
         } else {
             sendEmail(outcome);
@@ -217,7 +217,7 @@
 
 
     // Disable reporting if running locally (if running as static html, hostname is "")
-    function reportingDisabled() {
+    function debugMode() {
         return ["localhost", "127.0.0.1", ""].includes(window.location.hostname);
     }
 
