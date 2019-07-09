@@ -3,6 +3,7 @@
 
 let express = require('express');
 let fetch = require('node-fetch');
+require('log-timestamp');
 
 const PORT = 8081;
 const GEO_KEY = "at_IUxTwRiCCI0kwGkZSDm3VGaWxF4LY";
