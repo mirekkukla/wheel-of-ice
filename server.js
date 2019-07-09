@@ -17,10 +17,14 @@ app.use(express.json());
 
 // Get geographical info using callers IP
 app.get('/geo_info', (req, res) => {
-  console.log("GET /geo_info " + req.header('Content-Type'));
+  console.log("GET /geo_info");
   fetchGeo(req)
     .then(geoInfoJson => res.send(geoInfoJson))
-    .catch(error => console.error(error));
+    .catch(error => {
+      console.log("Geo fetch failed , error below. Returning dummy json with IP");
+      console.error(error);
+      res.send(getFakeGeoJson(req));
+    });
 });
 
 // Trigger the sending of an email via emailjs
@@ -33,7 +37,7 @@ app.post('/send_email', (req, res) => {
   let contentHeader = req.header('Content-Type');
   if (contentHeader !== "application/json") {
     let errorMsg = `Content-Type header must be 'application/json' (${contentHeader})`;
-    res.status("400").json({error: errorMsg});
+    res.status("400").send(errorMsg);
     throw new Error(errorMsg);
   }
 
@@ -42,7 +46,7 @@ app.post('/send_email', (req, res) => {
   let outcome = req.body.outcome;
   if (!outcome) {
     let errorMsg = `Missing or empty missing 'outcome' parameter (${bodyStr})`;
-    res.status("400").json({error: errorMsg});
+    res.status("400").send(errorMsg);
     throw new Error(errorMsg);
   }
 
@@ -51,23 +55,9 @@ app.post('/send_email', (req, res) => {
     .catch(error => {
       console.log("Geo fetch failed , error below. Continuing with email logic");
       console.error(error);
-
-      const errMsg = "geo fetching error";
-      let fakeGeoJson = {
-        ip: getIP(req),
-        location: {
-          city: errMsg,
-          region: errMsg,
-          country: errMsg,
-          lat: errMsg,
-          lng: errMsg
-        }
-      };
-
-      return fakeGeoJson;
+      return getFakeGeoJson(req);
     })
     .then(geoInfoJson => sendEmail(outcome, geoInfoJson))
-
     .then(templateParams => {
       let payload = {
         message: "Email succesfull sent",
@@ -100,6 +90,24 @@ function getIP(req) {
   return raw_ip.split(",")[0].trim();
 }
 
+// If our called to the geo info API fails, you can use this "dummy"
+// object that looks like the standard geo call response. Most values
+// contain an error message, but since we have the IP from the request,
+// we might as well use it
+function getFakeGeoJson(req) {
+    const errMsg = "geo fetching error";
+    let fakeGeoJson = {
+      ip: getIP(req),
+      location: {
+        city: errMsg,
+        region: errMsg,
+        country: errMsg,
+        lat: errMsg,
+        lng: errMsg
+      }
+    };
+    return fakeGeoJson;
+}
 
 // Send email using EmailJS (note that gmail might categorize the email as spam)
 // Returns a promise chain where the final promise contains the email template params
@@ -147,6 +155,7 @@ function handleFetchErrors(response) {
   return response.clone().text()
     .then(bodyTxt => {
       if (!response.ok) {
+        console.error("Fetch response wasn't OK");
         throw new Error(`status: '${response.status}', body: '${bodyTxt}'`);
       }
       return response;

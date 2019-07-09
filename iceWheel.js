@@ -260,6 +260,6 @@
           }
           return response;
         });
-}
+    }
 
 })();
