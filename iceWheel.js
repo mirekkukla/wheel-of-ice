@@ -10,7 +10,7 @@
     // Wheel constants
     const NUM_SEGMENTS = 6;
     const NUM_SPINS = 5;
-    const SPIN_DURATION = debugMode ? 1 : 10;
+    const SPIN_DURATION = debugMode() ? 1 : 10;
 
     const jandroSlices = [
        {'fillStyle' : '#ad172b', 'text' : '\nYou win!'},

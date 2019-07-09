@@ -15,18 +15,6 @@ let app = express();
 app.use(express.static(__dirname));
 app.use(express.json());
 
-// Get geographical info using callers IP
-app.get('/geo_info', (req, res) => {
-  logRequest(req);
-  fetchGeo(req)
-    .then(geoInfoJson => res.send(geoInfoJson))
-    .catch(error => {
-      console.log("Geo fetch failed , error below. Returning dummy json with IP");
-      console.error(error);
-      res.send(getFakeGeoJson(req));
-    });
-});
-
 // Trigger the sending of an email via emailjs
 // Post body should be `{'outcome': 'description of spin outcome'}`
 app.post('/send_email', (req, res) => {
@@ -84,8 +72,6 @@ app.listen(PORT, () => {
 
 // TODO: move from fetch to axios (http://tiny.cc/0nrx5y and http://tiny.cc/qnrx5y)
 function fetchGeo(req) {
-  // Careful: req.ip doesn't work if we're behind an nginx proxy!
-  // https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
   let ip = getIP(req);
   console.log("Fetching geo info for IP " + ip);
   let url = `https://geo.ipify.org/api/v1?apiKey=${GEO_KEY}&ipAddress=${ip}`;
@@ -93,6 +79,8 @@ function fetchGeo(req) {
 }
 
 function getIP(req) {
+  // Careful: req.ip doesn't work if we're behind an nginx proxy!
+  // https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
   let raw_ip = req.header('x-forwarded-for') || req.connection.remoteAddress;
   return raw_ip.split(",")[0].trim();
 }
