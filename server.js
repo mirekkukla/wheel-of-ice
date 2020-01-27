@@ -3,7 +3,6 @@
 
 let express = require("express");
 let fetch = require("node-fetch");
-let axios = require("axios");
 require("log-timestamp");
 
 const PORT = 8081;
