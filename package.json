@@ -16,9 +16,9 @@
   },
   "homepage": "https://github.com/Mirekkukla/wheel-of-ice#readme",
   "dependencies": {
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "log-timestamp": "^0.3.0",
-    "node-fetch": "^2.4.1",
-    "nodemon": "^1.18.10"
+    "node-fetch": "^2.6.0",
+    "nodemon": "^1.19.4"
   }
 }
